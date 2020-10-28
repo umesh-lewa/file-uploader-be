@@ -30,28 +30,28 @@ const upload = multer({
 });
 
 // *********************************************** Upload File *********************************************
-router.post('/upload',upload.single('file'),async (req, res) => {
+router.post('/upload', upload.single('file'), async (req, res) => {
 
-    try {
-      const { title, description } = req.body;
-      const { path, mimetype } = req.file;
-      const file = new File({
-        title,
-        description,
-        file_path: path,
-        file_mimetype: mimetype
-      });
-      await file.save();
+  try {
+    const { title, description } = req.body;
+    const { path, mimetype } = req.file;
+    const file = new File({
+      title,
+      description,
+      file_path: path,
+      file_mimetype: mimetype
+    });
+    await file.save();
 
-      res.send('file uploaded successfully.');
+    res.send('file uploaded successfully.');
 
-    } catch (error) {
+  } catch (error) {
 
-      res.status(400).send('Error while uploading file. Try again later.');
+    res.status(400).send('Error while uploading file. Try again later.');
 
-    }
+  }
 
-  },
+},
   (error, req, res, next) => {
 
     if (error) {
@@ -62,6 +62,24 @@ router.post('/upload',upload.single('file'),async (req, res) => {
 
 );
 
+// *********************************************** Get All Uploaded Files *********************************************
+router.get('/getAllFiles', async (req, res) => {
 
+  try {
+
+    const files = await File.find({});
+    const sortedByCreationDate = files.sort(
+      (a, b) => b.createdAt - a.createdAt
+    );
+
+    res.send(sortedByCreationDate);
+
+  } catch (error) {
+
+    res.status(400).send('Error while getting list of files. Try again later.');
+
+  }
+
+});
 
 module.exports = router;
