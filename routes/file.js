@@ -4,8 +4,10 @@ const multer = require('multer');
 const File = require('../model/file');
 const router = express.Router();
 
+
 // *********************************************** Upload File Function *********************************************
 const upload = multer({
+
   storage: multer.diskStorage({
     destination(req, file, cb) {
       cb(null, './files');
@@ -14,19 +16,22 @@ const upload = multer({
       cb(null, `${new Date().getTime()}_${file.originalname}`);
     }
   }),
+
   limits: {
     fileSize: 1000000 // max file size 1MB = 1000000 bytes
   },
-  fileFilter(req, file, cb) {
+
+  fileFilter(req, file, callback) {
     if (!file.originalname.match(/\.(jpeg|jpg|png|pdf|doc|docx|xlsx|xls)$/)) {
-      return cb(
+      return callback(
         new Error(
           'only upload files with jpg, jpeg, png, pdf, doc, docx, xslx, xls format.'
         )
       );
     }
-    cb(undefined, true); // continue with upload
+    callback(undefined, true); // continue with upload
   }
+
 });
 
 // *********************************************** Upload File *********************************************
@@ -84,9 +89,11 @@ router.get('/getAllFiles', async (req, res) => {
 
 // *********************************************** Get Single Uploaded File *********************************************
 router.get('/download/:id', async (req, res) => {
+
   try {
 
     const file = await File.findById(req.params.id);
+
     res.set({
       'Content-Type': file.file_mimetype
     });
