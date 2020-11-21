@@ -49,9 +49,11 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     await file.save();
 
     res.send('file uploaded successfully.');
+    console.log("Successfully uploaded file");
 
   } catch (error) {
-
+    
+    console.log(error);
     res.status(400).send('Error while uploading file. Try again later.');
 
   }
@@ -78,9 +80,11 @@ router.get('/getAllFiles', async (req, res) => {
     );
 
     res.send(sortedByCreationDate);
+    console.log("Successfully sent list of files");
 
   } catch (error) {
 
+    console.log(error);
     res.status(400).send('Error while getting list of files. Try again later.');
 
   }
@@ -99,9 +103,11 @@ router.get('/download/:id', async (req, res) => {
     });
 
     res.sendFile(path.join(__dirname, '..', file.file_path));
+    console.log("Successfully sent file");
 
   } catch (error) {
 
+    console.log(error);
     res.status(400).send('Error while downloading file. Try again later.');
 
   }
